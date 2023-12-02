@@ -1,6 +1,6 @@
 import { pre } from "./db/index.mjs";
 
-export const ConnectionElement = document.getElementById('connection_section')
+const ConnectionElement = document.getElementById('connection_section')
 const btnConnection = document.getElementById('btn-connection')
 
 const mostrarEstadoConexion = () => {
