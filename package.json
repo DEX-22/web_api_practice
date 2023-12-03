@@ -1,0 +1,21 @@
+{
+  "name": "web_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.mjs",
+  "scripts": {
+    "start:http": "deno run --allow-net --allow-read ./server/http/index.ts",
+    "start:ws": "deno run --allow-net --unstable ./server/websocket/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DEX-22/web_api_practice.git"
+  },
+  "author": "Enrique Saenz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DEX-22/web_api_practice/issues"
+  },
+  "homepage": "https://github.com/DEX-22/web_api_practice#readme"
+}

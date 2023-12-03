@@ -1,5 +1,4 @@
-import { pre } from "./db/index.mjs";
-
+ 
 const ConnectionElement = document.getElementById('connection_section')
 const btnConnection = document.getElementById('btn-connection')
 
