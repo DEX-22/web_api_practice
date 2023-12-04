@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+  
 </head>
 <body style="height: 100dvh;">
-    
+<!--     
     <form  id="form">
         este es un form
         <button type="submit">click aqui</button>
@@ -17,23 +18,40 @@
 <section id="connection_section">
     <button id="btn-connection"> click in status network</button>
 </section>
-<section id="motion-container">
+<section id="motion-container"> 
 
+</section>-->
+<section id="pre_ping_pong" style="width: 100vw; height: 100vh; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+    <button  id="btn_pre_ping_pong" style="width: 10%; height: 10%;">
+        ENTRAR EN SALAS
+    </button>
 </section>
-<section id="ping-pong">
-    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between;">
-        <button id="btnPing">PING</button>
-        <button id="btnPong">PONG</button>
+<section id="ping-pong" style="display: none;">
+    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; flex-wrap: wrap;">
+        <h3 style="width: 100%;">SALAS</h3>
+        <ul id="lista_salas">
+            
+        </ul>
+       <!--  <div>
+            <textarea id="inputPing" cols="30" rows="10"></textarea>
+            <button id="btnPing">PING</button>
+
+        </div>
+        <div>
+            <textarea id="inputPong" cols="30" rows="10"></textarea>
+            <button id="btnPong">PONG</button>
+        </div> -->
     </div>
-    <div style="display: flex; flex-direction: row; width: 100%; min-height: 20rem; justify-content: space-between;">
-        <span id="txtPing" style="width: 40%;"></span>
-        <span id="txtPong" style="width: 40%;"></span>
+    <div id="bandeja_mensajes" style="display: flex; flex-direction: column; width: 100%; min-height: 20rem;  ">
+         
     </div>
 </section>
 
 
     <!-- <script type="module" src="./app.mjs"></script> -->
+    
     <script type="module" src="./websocket/index.mjs"></script>
+    <script type="module" src="./functions/access.mjs"></script>
     <!-- <script type="module" src="./network/index.mjs"></script>
     <script type="module" src="./db/index.mjs"></script> -->
 
