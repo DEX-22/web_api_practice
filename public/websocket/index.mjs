@@ -30,7 +30,10 @@ btnPrePingPong.onclick = async () => {
 
 const addItemList = (text) => {
   const item = document.createElement('li')
-  item.innerText = text
+  const button = document.createElement('button')
+  button.innerText = text
+  button.onclick = () => sendRequetToEnterInSala(text)
+  item.appendChild(button)
   listaSalas.appendChild(item);
 }
 
@@ -39,6 +42,11 @@ const createItemList = (channels) => {
     addItemList(key);
   }
 };
+const sendRequetToEnterInSala = (channel) => {
+  const req = {channel,message:'request to enter in room'}
+  console.log('solicitud para ingresar a sala envida');
+    ws.send(JSON.stringify(req))
+}
 
 const startWebSocket = async () => {
   await ws.addEventListener("open", async function (e) {

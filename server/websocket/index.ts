@@ -15,11 +15,15 @@ const clients = new Set()
 const channels = {}
 
 
-const createChannel = (name) => {
-  channels[name] = []
+const createChannel = (channel) => {
+  channels[channel] = []
 }
 const addClient = (client,channel) => {
   channels[channel].push(client)
+}
+
+const removeFromChannel = (client, channel) => {
+  channels[channel] = channels[channel].filter( c => c !== client);
 }
 
 createChannel('WAIT_ROOM')
@@ -40,6 +44,9 @@ wss.on('connection',(client)=>{
       client.send(JSON.stringify(subsctiption))
     }else if(typeof data == 'object'){
       const {channel,message} = data
+      console.log(data);
+      removeFromChannel(client, 'WAIT_ROOM');
+      addClient(client, channel);
       user.setMessage(message) 
       for (const c of channels[channel]) { 
           c.send(JSON.stringify(user))
