@@ -2,7 +2,7 @@ class User{
     id
     message
     constructor() {
-        this.id = `${Math.random().toFixed(2)*100}`
+        this.id = `${Math.random().toFixed(5)*(10**5)}`
     }
     setMessage(msg){
         this.message = msg        
@@ -13,6 +13,7 @@ class User{
     getId(){
         return this.id
     }
+    
 
 }
 

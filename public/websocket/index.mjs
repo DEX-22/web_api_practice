@@ -1,5 +1,7 @@
 import { btnPrePingPong, pingPong, prePingPong } from "../functions/access.mjs";
-const listaSalas = document.getElementById('lista_salas')
+import {contenedorMensajes,inputPing,inputPong,
+        btnPing,btnPong,txtPing,txtPong,listaSalas} from '../components/websockets.mjs'
+
 
 const endpoint = "ws://127.0.0.1:4000";
 const channel = "pin_pon"
@@ -7,25 +9,21 @@ let ws
 const tunnel = new BroadcastChannel(channel)
 window.channels = new Array()
 
+const updateChannelList = (userId,from,to) => {
+  const index = window.channels[from].findIndex(ch=>ch.userId == userId)
+  const user = window.channels[from].splice(index,1).at(0)
+  window.channels[to].push(user)
+  console.log(window.channels[to]);
+}
 
-const contenedorMensajes = document.getElementById('bandeja_mensajes')
-const inputPing = document.getElementById('inputPing')
-const inputPong = document.getElementById('inputPong')
-
-const btnPing = document.getElementById('btnPing')
-const btnPong = document.getElementById('btnPong')
-
-const txtPing = document.getElementById('txtPing')
-const txtPong = document.getElementById('txtPong')
-
-btnPrePingPong.onclick = async () => {
-
-  ws = new WebSocket(endpoint);
-
-  prePingPong.style.display = 'none'
-  pingPong.style.display = 'block'
-
-  await startWebSocket();
+const sendRequetToEnterInSala = async (channel) => {
+  const req = {channel,message:'request to enter in room'}
+  console.log('solicitud para ingresar a sala'); 
+  await ws.send(JSON.stringify(req)) 
+  ws.onmessage =async (event)=>{
+    const {userId,from,to} = await JSON.parse(event.data)
+    updateChannelList(userId,from,to) 
+  }
 }
 
 const addItemList = (text) => {
@@ -37,41 +35,53 @@ const addItemList = (text) => {
   listaSalas.appendChild(item);
 }
 
-const createItemList = (channels) => {
+const createList = (channels) => {
   for (const key in channels) {
     addItemList(key);
   }
 };
-const sendRequetToEnterInSala = (channel) => {
-  const req = {channel,message:'request to enter in room'}
-  console.log('solicitud para ingresar a sala envida');
-    ws.send(JSON.stringify(req))
-}
+
+const startSesion = async (e) => {
+    // ws = e.target
+    await ws.send('User access')
+      ws.onmessage = async (event) => {
+      const {id,channels} = await JSON.parse(event.data) 
+        window.channels = channels
+        localStorage.setItem('user_id',id)
+        createList(window.channels)
+        console.log('asd',window.channels);
+        contenedorMensajes.innerHTML = "BIEEEN ESTAMOS DENTRO" 
+    }
+  } 
 
 const startWebSocket = async () => {
-  await ws.addEventListener("open", async function (e) {
+  await ws.addEventListener("open", async(e)=>{
+    if(!hasSession()){
+      await startSesion(e) 
+    }else{ 
+      
+    }
+    
 
-    await ws.send('User access')
-    await ws.addEventListener('message', async (event) => {
-      const data = await JSON.parse(event.data)
-      if (data.subscribe) {
-        window.channels = data.channels
-        createItemList(window.channels);
-        document.innerHTML = "BIEEEN ESTAMOS DENTRO"
-      } else {
-        const usu = JSON.parse(data)
-        console.log(usu);
-
-        const txt = !true ?
-          `<span id="txtPing" style="width: 100%; background-color: cadetblue; ">${data}</span>` :
-          `<span id="txtPong" style="width: 100%; background-color:coral; ">${data}</span>`
-
-        contenedorMensajes.innerHTML += txt
-
-      }
-    })
   })
 }
+
+btnPrePingPong.onclick = async () => {
+
+  ws = new WebSocket(endpoint);
+
+  prePingPong.style.display = 'none'
+  pingPong.style.display = 'block'
+
+  await startWebSocket();
+}
+
+
+const userId = () => localStorage.getItem('user_id') 
+
+const hasSession = () =>!!userId() ?? false
+
+
 // btnPing.onclick = (event)=>{
 //   const message = inputPing.value
 //   const txt = JSON.stringify({sender:'ping',message})
