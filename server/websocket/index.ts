@@ -23,35 +23,62 @@ const addClient = (client,channel) => {
   channels[channel].push({userId:user.getId(),client})
 }
 
-const removeFromChannel = (client, channel) => {
-  console.log('channels 1',channels);
-  
-  channels[channel] = channels[channel].filter( c => c == client);
-
-  console.log('channels 2',channels);
+const removeFromChannel = (client, channel) => {  
+  channels[channel] = channels[channel].filter( c => c == client)
 }
  
 
+const changeChannel = (client,dataObj,from) => {
+  const {channel,message} = dataObj
+  addClient(client, channel) 
+  user.setCurrentChannel(channel) 
+  removeFromChannel(client, from)  
+  const response = JSON.stringify({
+    from,to:channel,userId:user.getId(),
+    message: 'User enter in '+channel
+  })
+
+  broadcast(channel,response,user.getId())
+  // client.send(JSON.stringify(response)) 
+} 
+
+const reconect = async (client,dataObj) => {
+  const {id} = dataObj
+
+  for (const channel in channels) { 
+    const index = channels[channel].findIndex(e=> e.userId==id ) 
+    if(index !== -1){
+      const item = channels[channel].splice(index,1).at(0) 
+      channels['WAIT_ROOM'].push(item)
+      user.setCurrentChannel('WAIT_ROOM') 
+      break
+    } 
+  }
+
+  // changeChannel(client,dataObj,from)
+
+  let session = await JSON.stringify({channels,id})  
+  client.send(session)
+ 
+}
+const broadcast = (channel: string, message: string, sender: Number|String) => {
+  for (const {userId,client:sock} of channels[channel]) {  
+      sock.send(message); 
+  }
+}
 const subscription = (client,dataObj) => {
   user = new User()
   addClient(client, 'WAIT_ROOM');
   
   const subscription = JSON.stringify({id:user.getId(),channels})
+ 
   client.send(subscription)
-}
-const reconect = () => {
   
 }
 const openChannel = (client,dataObj) => {
-  const {channel,message} = dataObj
-  addClient(client, channel)
-  removeFromChannel(client, 'WAIT_ROOM')  
-  const response = {
-    from:'WAIT_ROOM',to:channel,userId:user.getId(),
-    message: 'User enter in '+channel
-  }
-  client.send(JSON.stringify(response)) 
-} 
+
+  changeChannel(client,dataObj,'WAIT_ROOM')
+}
 const sendMessage = (client,dataObj) => {
 
 } 
@@ -61,32 +88,28 @@ const messageType = (data) : Function => {
     return subscription
   else if(data.search('request') !== -1){
     return openChannel
-  }else if(data.search('message') !== -1){
+  }else if(data.search('send message') !== -1){
     return sendMessage
+  }else if(data.search('reconect') !== -1){
+    return reconect
   }
 }
-wss.on('connection',(client)=>{ 
- 
-  createChannel('WAIT_ROOM')
+
+createChannel('WAIT_ROOM')
   createChannel('CHANNEL_1')
   createChannel('CHANNEL_2')
   createChannel('CHANNEL_3')
   createChannel('CHANNEL_4')
+
+wss.on('connection',(client)=>{ 
+ 
   
-  client.on('message',(data)=>{
-
-    const type = messageType(data)
-    
+  
+  client.on('message',(data)=>{ 
+    const type = messageType(data) 
     const obj = type.name == 'subscription' ? data : JSON.parse(data)
-    // console.log(obj);
-    console.log(type.name);
-    
-    type(client,obj)
-
-
-
-
-    
+    type(client,obj) 
+    console.log(type.name); 
   })      
 })
 
@@ -139,10 +162,3 @@ wss.on('connection',(client)=>{
 //   ws.send('conectao')
 // });
  
-const broadcast = (channel: string, message: string, sender: WebSocket) => {
-  for (const sock of channels[channel]) {
-    if (sock !== sender && sock.readyState === WebSocket.OPEN) {
-      sock.send(message);
-    }
-  }
-}

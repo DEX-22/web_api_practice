@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MamahuevoApp</title>
-   
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdn.tailwindcss.com"></script> 
 </head>
 <body style="height: 100dvh;">
 <!--     
@@ -22,29 +24,32 @@
 
 </section>-->
 <section id="pre_ping_pong" style="width: 100vw; height: 100vh; display: flex; flex-direction: row; justify-content: center; align-items: center;">
-    <button  id="btn_pre_ping_pong" style="width: 10%; height: 10%;">
-        ENTRAR EN SALAS
-    </button>
+    <div class="hero min-h-screen bg-base-200">
+        <div class="hero-content text-center">
+          <div class="max-w-md">
+            <h1 class="text-5xl font-bold">Holaa!</h1>
+            <p class="py-6">Bienvenido al espacio para hablar con gente random</p>
+            <button  id="btn_pre_ping_pong" class="btn btn-primary">
+                ENTRAR EN SALAS
+            </button>
+          </div>
+        </div>
+      </div>
+    
+    
 </section>
 <section id="ping-pong" style="display: none;">
-    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; flex-wrap: wrap;">
-        <h3 style="width: 100%;">SALAS</h3>
-        <ul id="lista_salas">
+    <div id="contenedor_salas" class="border-gray-300" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; flex-wrap: wrap;">
+        <h3 class="w-full px-4 py-2 m-2 text-2xl  text-center">SALAS</h3>
+        <div id="lista_salas" class="flex flex-row flex-wrap "  >
             
-        </ul>
-         <div>
-            <textarea id="inputPing" cols="30" rows="10"></textarea>
-            <button id="btnPing">PING</button>
-
         </div>
-        <div>
-            <textarea id="inputPong" cols="30" rows="10"></textarea>
-            <button id="btnPong">PONG</button>
-        </div> 
     </div>
-    <div id="bandeja_mensajes" style="display: flex; flex-direction: column; width: 100%; min-height: 20rem;  ">
-         
+    <div  id="bandeja_mensajes" class="container" 
+            style="display:none; width: 50%; min-height: 20rem;  ">
+       
     </div>
+   
 </section>
 
 

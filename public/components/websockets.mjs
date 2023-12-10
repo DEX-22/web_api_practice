@@ -9,3 +9,5 @@ export const btnPong = document.getElementById('btnPong')
 export const txtPing = document.getElementById('txtPing')
 export const txtPong = document.getElementById('txtPong')
 export const listaSalas = document.getElementById('lista_salas')
+export const contenedorSalas = document.getElementById('contenedor_salas')
+

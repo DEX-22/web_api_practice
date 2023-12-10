@@ -1,6 +1,8 @@
 class User{
     id
     message
+    currentChannel
+    
     constructor() {
         this.id = `${Math.random().toFixed(5)*(10**5)}`
     }
@@ -13,7 +15,9 @@ class User{
     getId(){
         return this.id
     }
-    
+    setCurrentChannel(channel){
+        this.currentChannel = channel
+    }
 
 }
 
