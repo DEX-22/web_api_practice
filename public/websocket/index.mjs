@@ -1,6 +1,6 @@
 import { btnPrePingPong, pingPong, prePingPong } from "../functions/access.mjs";
-import {contenedorMensajes,inputPing,inputPong,
-        btnPing,btnPong,txtPing,txtPong,listaSalas, contenedorSalas} from '../components/websockets.mjs'
+import {contenedorMensajes,inputPing,inputPong,returnToChannels,
+        btnPing,btnPong,txtPing,txtPong,listaSalas, contenedorSalas, salaName} from '../components/websockets.mjs'
 
 
 const endpoint = "ws://127.0.0.1:4000";
@@ -16,21 +16,18 @@ const updateChannelList = (userId,from,to) => {
 }
 
 const sendRequetToEnterInSala = async (channel) => {
-  const req = {channel,message:'request to enter in room'}
+  const req = {userId,channel,message:'request to enter in room'}
   console.log('solicitud para ingresar a sala'); 
   await ws.send(JSON.stringify(req)) 
   ws.onmessage =async (event)=>{
     const {userId,from,to} = await JSON.parse(event.data)
+    
+    returnToChannels.onclick = (e) => returnToChannelsSection(to) 
     updateChannelList(userId,from,to) 
     contenedorSalas.style = 'display: none;'
     contenedorMensajes.style = 'display: flex; flex-direction: column;'
+    salaName.innerText = to
 
-    contenedorMensajes.innerHTML += ` 
-    <section class="card border-slate-300" id="mensajes"></section>
-    <section class="card" id="enviar_mensaje">
-        <input class="input" type="text">
-        <button class="btn btn-primary">send</button>
-    </section>`
   }
 }
 
@@ -57,8 +54,7 @@ const startSesion = async (e) => {
       const {id,channels} = await JSON.parse(event.data) 
         window.channels = channels
         localStorage.setItem('user_id',id)
-        createList(window.channels) 
-        contenedorMensajes.innerHTML = "BIEEEN ESTAMOS DENTRO" 
+        createList(window.channels)  
     }
   } 
 const reconect = (e) =>{
@@ -97,6 +93,14 @@ btnPrePingPong.onclick = async () => {
 const userId = () => localStorage.getItem('user_id') 
 
 const hasSession = () =>!!userId() ?? false
+
+const returnToChannelsSection = (from) => {
+  updateChannelList(userId(),from,'WAIT_ROOM') 
+  contenedorMensajes.style.display = 'none'
+  contenedorSalas.style.display = 'block'
+}
+
+
 // ws.addEventListener('close', (e) =>{
 //     localStorage.removeItem('user_id')
 // })

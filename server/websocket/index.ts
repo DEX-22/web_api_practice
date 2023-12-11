@@ -30,9 +30,13 @@ const removeFromChannel = (client, channel) => {
 
 const changeChannel = (client,dataObj,from) => {
   const {channel,message} = dataObj
-  addClient(client, channel) 
-  user.setCurrentChannel(channel) 
-  removeFromChannel(client, from)  
+  const index = channels[channel].findIndex(e=> e.userId==dataObj.userId ) 
+  if(index == -1){
+    addClient(client, channel) 
+    user.setCurrentChannel(channel) 
+    removeFromChannel(client, from)  
+  }
+    
   const response = JSON.stringify({
     from,to:channel,userId:user.getId(),
     message: 'User enter in '+channel
