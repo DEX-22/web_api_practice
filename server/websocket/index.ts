@@ -65,7 +65,7 @@ const reconect = async (client,dataObj) => {
   client.send(session)
  
 }
-const broadcast = (channel: string, message: string, sender: Number|String) => {
+const broadcast = (channel: string, message: string ) => {
   for (const {userId,client:sock} of channels[channel]) {  
       sock.send(message); 
   }
@@ -84,7 +84,12 @@ const openChannel = (client,dataObj) => {
   changeChannel(client,dataObj,'WAIT_ROOM')
 }
 const sendMessage = (client,dataObj) => {
-
+  const {data:{from,to,message}} = dataObj 
+  
+  const response = JSON.stringify({
+    from,to,message
+  }) 
+  broadcast(to,response)
 } 
 
 const messageType = (data) : Function => {
